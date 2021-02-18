@@ -1,4 +1,4 @@
-dependency "vrp_general" client_script "@vrp_general/client.lua" fx_version "adamant"
+fx_version "adamant"
 game "gta5" 
 
 client_scripts {
