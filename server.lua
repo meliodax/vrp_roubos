@@ -28,10 +28,14 @@ function cO.startRobbery(rJs,sJs)
         local setup = json.decode(sJs)
         for k,v in pairs(setup) do 
             if k == vector.type then 
-                local amountCops = vRP.getUsersByPermission("policia.permissao")
+                local amountCops = exports["vrp"]:getUsersByPermission("policia.permissao")
                 if parseInt(#amountCops) <= parseInt(v.lspd) then
                     TriggerClientEvent("Notify",source,"aviso","Sistema indisponível no momento, tente mais tarde.",5000)
                     return false
+                end
+
+                if vRP.searchReturn(source,user_id) then 
+                    return false 
                 end
 
                 local shopActived = vector.type..vector.id
@@ -42,7 +46,7 @@ function cO.startRobbery(rJs,sJs)
                         checkRobbery[source] = shopActived
                         recompensa[user_id] = v
                         vRPclient._playAnim(source,false,{"anim@heists@ornate_bank@grab_cash_heels","grab"},true)
-                        vCLIENT.iniciandoRoubo(source,vector.x, vector.y, vector.z, vector.tempo, vector.h)                                
+                        vCLIENT.iniciandoRoubo(source,vector.x, vector.y, vector.z, v.tempo, vector.h)                                
                         cO.avisarPolicia("Roubo em Andamento", "Assalto a "..vector.type.." em andamento, verifique o ocorrido.", vector.x, vector.y, vector.z, vector.type)
                     end
                 else
@@ -64,7 +68,7 @@ function cO.cancelRobbery()
         ultimoAssaltoHora[checkRobbery[source]] = nil
         checkRobbery[source] = nil
         recompensa[user_id] = nil
-        local policia = vRP.getUsersByPermission("policia.permissao")
+        local policia = exports["vrp"]:getUsersByPermission("policia.permissao")
         for l,w in pairs(policia) do
 			local player = vRP.getUserSource(parseInt(w))
 			local playerId = vRP.getUserId(player)
@@ -105,7 +109,6 @@ function cO.givePayment()
             vRP.giveInventoryItem(user_id,k,parseInt(math.random(i.min,i.max)))
         end
         recompensa[user_id] = nil
-        ultimoAssaltoHora[checkRobbery[source]] = nil
         checkRobbery[source] = nil
     end
 end
